@@ -1,9 +1,10 @@
 // ====== ONLY EDIT THESE ======
 const HER_NAME = "Khusboo";
-const OUR_SONG_URL = "https://open.spotify.com/"; // optional
+const OUR_SONG_URL = "https://open.spotify.com/"; // optional (paste your song link)
 
-// March 11 (month is 0-based → 2 = March)
-const TARGET_DATE = new Date(2026, 2, 11, 0, 0, 0);
+// ✅ March 11, 12:00 AM Fiji Time (UTC+12)
+// Fiji midnight (Mar 11 00:00) = UTC (Mar 10 12:00)
+const TARGET_DATE = new Date(Date.UTC(2026, 2, 10, 12, 0, 0));
 
 // Your message
 const LETTER = `
@@ -88,6 +89,7 @@ function showUnlocked() {
 }
 
 peekBtn.addEventListener("click", async () => {
+  // preview works anytime
   messageCard.classList.remove("hidden");
   lockedActions.classList.add("hidden");
   heroTitle.textContent = "Okay… a quick preview 😌";
@@ -105,7 +107,7 @@ openBtn.addEventListener("click", () => {
 });
 
 el("songBtn").addEventListener("click", () => {
-  window.open(OUR_SONG_URL, "_blank");
+  window.open(OUR_SONG_URL, "_blank", "noopener,noreferrer");
 });
 
 el("confettiBtn").addEventListener("click", () => burstConfetti(160));
@@ -122,6 +124,7 @@ sync();
 const canvas = el("fx");
 const ctx = canvas.getContext("2d");
 let particles = [];
+let animating = false;
 
 function resize() {
   canvas.width = innerWidth * devicePixelRatio;
@@ -146,10 +149,11 @@ function burstConfetti(count = 120) {
       hue: Math.random() * 360,
     });
   }
-  animate();
+  if (!animating) animate();
 }
 
 function animate() {
+  animating = true;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   particles = particles.filter((p) => p.a > 0.02);
@@ -165,4 +169,5 @@ function animate() {
   }
 
   if (particles.length) requestAnimationFrame(animate);
+  else animating = false;
 }
